@@ -21,21 +21,27 @@ class MyDict(object):
         if not cls.dictionary:
             cls.read_file()
         word = word.lower()
-        if word in cls.dictionary:
+        try:
             return cls.dictionary[word]
-        elif len(get_close_matches(word, cls.dictionary.keys())) > 0:
-            anwser = input(
-                "Did you mean {} instead? Enter Y if yes, or N if no: ".format(
-                    get_close_matches(word, cls.dictionary.keys())[0]))
-            if anwser in ['Y', 'y']:
-                return cls.dictionary[
-                    get_close_matches(word, cls.dictionary.keys())[0]]
-            elif anwser in ['N', 'n']:
+        except KeyError:
+            matches = get_close_matches(word, cls.dictionary.keys())
+            try:
+                candidate = matches[0]
+                anwser = input(
+                    "Did you mean {} instead? Enter Y if yes, or N if no: ".
+                    format(candidate))
+                if anwser in ['Y', 'y']:
+                    return cls.dictionary[candidate]
+                elif anwser in ['N', 'n']:
+                    raise MatchNotFoundError
+                else:
+                    return "Please anwser Y or N"
+            except (IndexError, MatchNotFoundError) as e:
                 return "The word doesn't exist"
-            else:
-                return "Please anwser Y or N"
-        else:
-            return "The word doesn't exist"
+
+
+class MatchNotFoundError(Exception):
+    pass
 
 
 def main():

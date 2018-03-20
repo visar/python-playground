@@ -25,6 +25,27 @@ class TestProcess(unittest.TestCase):
         match = MyDict.find_word("asdsadasdsadadadasd")
         self.assertEqual("The word doesn't exist", match)
 
+    def test_texas_lower(self):
+        texas = MyDict.find_word("texas")
+        self.assertIn(
+            "The 28th state of the United States of America, "
+            "located in the southern US.",
+            texas)
+
+    def test_texas_upper(self):
+        texas = MyDict.find_word("TEXAS")
+        self.assertIn(
+            "The 28th state of the United States of America, "
+            "located in the southern US.",
+            texas)
+
+    def test_texas_mixed(self):
+        texas = MyDict.find_word("tExAs")
+        self.assertIn(
+            "The 28th state of the United States of America, "
+            "located in the southern US.",
+            texas)
+
 
 if __name__ == '__name__':
     unittest.main()

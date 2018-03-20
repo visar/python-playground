@@ -20,9 +20,10 @@ class MyDict(object):
     def find_word(cls, word, filename="data.json"):
         if not cls.dictionary:
             cls.read_file()
-        word = word.lower()
         try:
-            return cls.dictionary[word]
+            return (cls.dictionary[word.lower()]
+                    if word.lower() in cls.dictionary.keys()
+                    else cls.dictionary[word.title()])
         except KeyError:
             matches = get_close_matches(word, cls.dictionary.keys())
             try:

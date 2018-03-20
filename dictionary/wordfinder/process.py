@@ -4,7 +4,7 @@ import os
 from difflib import get_close_matches
 
 
-class MyDict(object):
+class WordFinder(object):
     dictionary = dict()
 
     @classmethod
@@ -23,7 +23,9 @@ class MyDict(object):
         try:
             return (cls.dictionary[word.lower()]
                     if word.lower() in cls.dictionary.keys()
-                    else cls.dictionary[word.title()])
+                    else (cls.dictionary[word.title()]
+                          if word.title() in cls.dictionary.keys()
+                          else cls.dictionary[word.upper()]))
         except KeyError:
             matches = get_close_matches(word, cls.dictionary.keys())
             try:
@@ -51,7 +53,7 @@ class MatchNotFoundError(Exception):
 
 def main():
     word = input("Enter word: ")
-    output = MyDict.find_word(word)
+    output = WordFinder.find_word(word)
     if type(output) == list:
         for item in output:
             print(item)

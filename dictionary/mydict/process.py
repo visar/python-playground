@@ -29,13 +29,17 @@ class MyDict(object):
                 candidate = matches[0]
                 anwser = input(
                     "Did you mean {} instead? Enter Y if yes, or N if no: ".
-                    format(candidate))
-                if anwser in ['Y', 'y']:
+                    format(candidate)).lower()
+
+                while anwser not in ['y', 'n']:
+                    print("Please anwser Y or N: ")
+                    anwser = input().lower()
+
+                if anwser == 'y':
                     return cls.dictionary[candidate]
-                elif anwser in ['N', 'n']:
+                elif anwser == 'n':
                     raise MatchNotFoundError
-                else:
-                    return "Please anwser Y or N"
+
             except (IndexError, MatchNotFoundError) as e:
                 return "The word doesn't exist"
 

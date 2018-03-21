@@ -17,34 +17,42 @@ class WordFinder(object):
             return cls.dictionary
 
     @classmethod
+    def find_close_matches(cls, word):
+        matches = get_close_matches(word, cls.dictionary.keys())
+        try:
+            candidate = matches[0]
+
+            anwser = input(
+                "Did you mean {} instead? Enter Y if yes, or N if no: ".
+                format(candidate)).lower()
+            while anwser not in ['y', 'n']:
+                print("Please anwser Y or N: ")
+                anwser = input().lower()
+
+            if anwser == 'y':
+                return cls.dictionary[candidate]
+            elif anwser == 'n':
+                raise MatchNotFoundError
+
+        except (IndexError, MatchNotFoundError) as e:
+            return "The word doesn't exist"
+
+    @classmethod
     def find_word(cls, word, filename="data.json"):
         if not cls.dictionary:
             cls.read_file()
         try:
-            return (cls.dictionary[word.lower()]
-                    if word.lower() in cls.dictionary.keys()
-                    else (cls.dictionary[word.title()]
-                          if word.title() in cls.dictionary.keys()
-                          else cls.dictionary[word.upper()]))
+            return cls.dictionary[word.lower()]
         except KeyError:
-            matches = get_close_matches(word, cls.dictionary.keys())
-            try:
-                candidate = matches[0]
-                anwser = input(
-                    "Did you mean {} instead? Enter Y if yes, or N if no: ".
-                    format(candidate)).lower()
-
-                while anwser not in ['y', 'n']:
-                    print("Please anwser Y or N: ")
-                    anwser = input().lower()
-
-                if anwser == 'y':
-                    return cls.dictionary[candidate]
-                elif anwser == 'n':
-                    raise MatchNotFoundError
-
-            except (IndexError, MatchNotFoundError) as e:
-                return "The word doesn't exist"
+            pass
+        try:
+            return cls.dictionary[word.title()]
+        except KeyError:
+            pass
+        try:
+            return cls.dictionary[word.upper()]
+        except KeyError:
+            return cls.find_close_matches(word)
 
 
 class MatchNotFoundError(Exception):

@@ -25,8 +25,7 @@ class TestProcess(unittest.TestCase):
         match = WordFinder.find_word("asdsadasdsadadadasd")
         self.assertEqual("The word doesn't exist", match)
 
-    @mock.patch('builtins.input', return_value='Y')
-    def test_texas_lower(self, input):
+    def test_texas_lower(self):
         texas = WordFinder.find_word("texas")
         self.assertIn(
             "The 28th state of the United States of America, "
